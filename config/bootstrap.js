@@ -9,7 +9,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
-module.exports.bootstrap = function (cb) {
+module.exports.bootstrap = function(cb) {
     sails.Db = require('mongodb').Db,
         sails.MongoClient = require('mongodb').MongoClient,
         sails.ISODate = require('mongodb').ISODate,
@@ -25,14 +25,15 @@ module.exports.bootstrap = function (cb) {
         sails.md5 = require('MD5'),
         sails.moment = require('moment'),
         sails.fs = require('fs'),
-        sails.myurl = "http://vignesh.com:82/",
-        sails.mandrill = require('mandrill-api/mandrill'),
-        sails.mandrill_client = new sails.mandrill.Mandrill('dzbY2mySNE_Zsqr3hsK70A'),
-        sails.fromName = "Tag Boss",
-        sails.fromEmail = "vigneshkasthuri2009@gmail.com",
-        // Connection URL
-        sails.url = 'mongodb://localhost:27017/tagboss';
-    sails.query = function (myfunc) {
+        sails.lwip = require('lwip'),
+        // sails.myurl = "http://vignesh.com:82/",
+        // sails.mandrill = require('mandrill-api/mandrill'),
+        // sails.mandrill_client = new sails.mandrill.Mandrill('dzbY2mySNE_Zsqr3hsK70A'),
+        // sails.fromName = "Tag Boss",
+        // sails.fromEmail = "vigneshkasthuri2009@gmail.com",
+        // // Connection URL
+        // sails.url = 'mongodb://localhost:27017/tagboss';
+        sails.query = function(myfunc) {
             sails.MongoClient.connect(sails.url, myfunc);
         }
         // It's very important to trigger this callback method when you are finished

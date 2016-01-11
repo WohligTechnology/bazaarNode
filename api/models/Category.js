@@ -1,5 +1,10 @@
 module.exports = {
     save: function(data, callback) {
+        if (data.parent && data.parent.length > 0) {
+            _.each(data.parent, function(a) {
+                a._id = sails.ObjectID(a._id);
+            });
+        }
         sails.query(function(err, db) {
             if (err) {
                 console.log(err);
@@ -47,7 +52,7 @@ module.exports = {
                                 comment: "Error"
                             });
                             db.close();
-                        }  else if (updated.result.nModified != 0 && updated.result.n != 0) {
+                        } else if (updated.result.nModified != 0 && updated.result.n != 0) {
                             callback({
                                 value: true
                             });
@@ -235,5 +240,69 @@ module.exports = {
                 }
             });
         });
-    }
+    },
+    findCategory: function(data, callback) {
+        if (data.search && data.category) {
+            var returns = [];
+            var exit = 0;
+            var exitup = 1;
+            var check = new RegExp(data.search, "i");
+
+            function callback2(exit, exitup, data) {
+                if (exit == exitup) {
+                    callback(data);
+                }
+            }
+            sails.query(function(err, db) {
+                if (err) {
+                    console.log(err);
+                    callback({
+                        value: false
+                    });
+                }
+                if (db) {
+                    db.collection("category").find({
+                        name: {
+                            '$regex': check
+                        },
+                    }).limit(10).toArray(function(err, found) {
+                        if (err) {
+                            callback({
+                                value: false
+                            });
+                            console.log(err);
+                            db.close();
+                        } else if (found != null) {
+                            exit++;
+                            if (data.category.length != 0) {
+                                var nedata;
+                                nedata = _.remove(found, function(n) {
+                                    var flag = false;
+                                    _.each(data.category, function(n1) {
+                                        if (n1.name == n.name) {
+                                            flag = true;
+                                        }
+                                    })
+                                    return flag;
+                                });
+                            }
+                            returns = returns.concat(found);
+                            callback2(exit, exitup, returns);
+                        } else {
+                            callback({
+                                value: false,
+                                comment: "No data found"
+                            });
+                            db.close();
+                        }
+                    });
+                }
+            });
+        } else {
+            callback({
+                value: false,
+                comment: "Please provide parameters"
+            });
+        }
+    },
 };

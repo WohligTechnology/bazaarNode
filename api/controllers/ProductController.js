@@ -99,5 +99,25 @@ module.exports = {
                 comment: "Please provide parameters"
             });
         }
+    },
+    findProduct: function(req, res) {
+        if (req.body) {
+            if (req.body.category && req.body.category != "" && sails.ObjectID.isValid(req.body.category)) {
+                var print = function(data) {
+                    res.json(data);
+                }
+                Product.findProduct(req.body, print);
+            } else {
+                res.json({
+                    value: false,
+                    comment: "Product-id is incorrect"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                comment: "Please provide parameters"
+            });
+        }
     }
 };

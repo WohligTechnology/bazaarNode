@@ -1,5 +1,20 @@
 module.exports = {
     save: function(data, callback) {
+        if (data.category && data.category.length > 0) {
+            _.each(data.category, function(a) {
+                a._id = sails.ObjectID(a._id);
+            });
+        }
+        if (data.tag && data.tag.length > 0) {
+            _.each(data.tag, function(a) {
+                a._id = sails.ObjectID(a._id);
+            });
+        }
+        if (data.keyword && data.keyword.length > 0) {
+            _.each(data.keyword, function(a) {
+                a._id = sails.ObjectID(a._id);
+            });
+        }
         sails.query(function(err, db) {
             if (err) {
                 console.log(err);
@@ -47,7 +62,7 @@ module.exports = {
                                 comment: "Error"
                             });
                             db.close();
-                        }  else if (updated.result.nModified != 0 && updated.result.n != 0) {
+                        } else if (updated.result.nModified != 0 && updated.result.n != 0) {
                             callback({
                                 value: true
                             });
@@ -234,6 +249,42 @@ module.exports = {
                     db.close();
                 }
             });
+        });
+    },
+    findProduct: function(data, callback) {
+        sails.query(function(err, db) {
+            if (err) {
+                console.log(err);
+                callback({
+                    value: false
+                });
+            }
+            if (db) {
+                db.collection("product").aggregate([{
+                    $unwind: "$category"
+                }, {
+                    $match: {
+                        "category._id": sails.ObjectID(data.category)
+                    }
+                }]).toArray(function(err, data2) {
+                    if (err) {
+                        console.log(err);
+                        callback({
+                            value: false
+                        });
+                        db.close();
+                    } else if (data2 && data2[0]) {
+                        callback(data2);
+                        db.close();
+                    } else {
+                        callback({
+                            value: false,
+                            comment: "No data found"
+                        });
+                        db.close();
+                    }
+                });
+            }
         });
     }
 };

@@ -99,5 +99,25 @@ module.exports = {
                 comment: "Please provide parameters"
             });
         }
+    },
+    findCategory: function(req, res) {
+        if (req.body) {
+            if (req.body.category && Array.isArray(req.body.category)) {
+                var print = function(data) {
+                    res.json(data);
+                }
+                Category.findCategory(req.body, print);
+            } else {
+                res.json({
+                    value: false,
+                    comment: "Please provide parameters"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                comment: "Please provide parameters"
+            });
+        }
     }
 };
