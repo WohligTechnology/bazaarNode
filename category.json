@@ -1,0 +1,9 @@
+{"_id":{"$oid":"568e54cf4f65585410d9c3d8"},"image":"","name":"Mobiles","order":"1","parent":[],"status":"Enable"}
+{"_id":{"$oid":"568f47becd05a28c021e651e"},"image":"","name":"Camera","order":"2","parent":[],"status":"Enabled"}
+{"_id":{"$oid":"568f47cecd05a28c021e651f"},"image":"","name":"Computer","order":"3","parent":[],"status":"Enabled"}
+{"_id":{"$oid":"568f47dfcd05a28c021e6520"},"image":"","name":"Accessories","order":"4","parent":[],"status":"Enabled"}
+{"_id":{"$oid":"568f4961cd05a28c021e6521"},"image":"","name":"Point \u0026 Shoot","order":"1","parent":[{"_id":{"$oid":"568f47becd05a28c021e651e"},"name":"Camera"}],"status":"Enabled"}
+{"_id":{"$oid":"568f4972cd05a28c021e6522"},"image":"","name":"DSLR","order":"2","parent":[{"_id":{"$oid":"568f47becd05a28c021e651e"},"name":"Camera"}]}
+{"_id":{"$oid":"568f4991cd05a28c021e6523"},"image":"","name":"Instant Cameras","order":"3","parent":[{"_id":{"$oid":"568f47becd05a28c021e651e"},"name":"Camera"}]}
+{"_id":{"$oid":"568f49afcd05a28c021e6524"},"image":"","name":"Sport \u0026 Action Cameras","order":"4","parent":[{"_id":{"$oid":"568f47becd05a28c021e651e"},"name":"Camera"}]}
+{"_id":{"$oid":"568f49c2cd05a28c021e6525"},"image":"","name":"Camera Lenses","order":"5","parent":[{"_id":{"$oid":"568f47becd05a28c021e651e"},"name":"Camera"}]}
