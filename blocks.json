@@ -1,0 +1,4 @@
+{"_id":{"$oid":"568e08036b4b785c21553a2b"},"content":"For All","image":"8937286a-294d-4498-a5d5-ac54b367c393.png","name":"Mobiles"}
+{"_id":{"$oid":"568e08276b4b785c21553a2c"},"content":"Computers","image":"f2cfe6a6-8ebb-49b3-8b42-68fdd0e42184.png","name":"Best"}
+{"_id":{"$oid":"568e08486b4b785c21553a2d"},"content":"Cameras","image":"64fde954-b8a9-4354-a8ab-6607652d1d29.png","name":"Best"}
+{"_id":{"$oid":"568e08686b4b785c21553a2e"},"content":"Accessories","image":"e7627652-c0a3-48bc-8a61-ffaff9fd748d.png","name":"Cool"}
