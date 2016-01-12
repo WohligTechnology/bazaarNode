@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Users
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var frontend = "http://192.168.0.110:8080/";
+var frontend = "http://wohlig.co.in/tagboss/";
 var passport = require('passport'),
     TwitterStrategy = require('passport-twitter').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
@@ -36,8 +36,8 @@ passport.use(new FacebookStrategy({
 ));
 
 passport.use(new GoogleStrategy({
-        clientID: "134127417071-165vbnskckor8f786cq2f2u0i4pkrnj8.apps.googleusercontent.com",
-        clientSecret: "r4P0uGeJIx9R_qSYhFVitkFi",
+        clientID: "255093403704-0ss1qsp6r0pegavuhk9hknvggtk47357.apps.googleusercontent.com",
+        clientSecret: "QLHIdMHGd-R6tiZV5rYOqkha",
         callbackURL: "callbackg"
     },
     function(token, tokenSecret, profile, done) {
@@ -111,8 +111,8 @@ module.exports = {
         var user = req.param("user");
 
         passport.use(new GoogleStrategy({
-                clientID: "134127417071-165vbnskckor8f786cq2f2u0i4pkrnj8.apps.googleusercontent.com",
-                clientSecret: "r4P0uGeJIx9R_qSYhFVitkFi",
+                clientID: "255093403704-0ss1qsp6r0pegavuhk9hknvggtk47357.apps.googleusercontent.com",
+                clientSecret: "QLHIdMHGd-R6tiZV5rYOqkha",
                 callbackURL: "callbackg"
             },
             function(token, tokenSecret, profile, done) {
