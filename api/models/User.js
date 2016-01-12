@@ -6,6 +6,50 @@
  */
 
 module.exports = {
+    adminlogin: function(data, callback) {
+        if (data.password) {
+            data.password = sails.md5(data.password);
+            sails.query(function(err, db) {
+                if (db) {
+                    db.collection('user').find({
+                        email: data.email,
+                        password: data.password,
+                        accesslevel: "admin"
+                    }, {
+                        password: 0,
+                        forgotpassword: 0
+                    }).toArray(function(err, found) {
+                        if (err) {
+                            callback({
+                                value: false
+                            });
+                            console.log(err);
+                            db.close();
+                        } else if (found && found[0]) {
+                            callback(found[0]);
+                            db.close();
+                        } else {
+                            callback({
+                                value: false,
+                                comment: "No data found"
+                            });
+                            db.close();
+                        }
+                    });
+                }
+                if (err) {
+                    console.log(err);
+                    callback({
+                        value: false
+                    });
+                }
+            });
+        } else {
+            callback({
+                value: false
+            });
+        }
+    },
     findorcreate: function(data, callback) {
         var orfunc = {};
         var insertdata = {};

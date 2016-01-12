@@ -364,5 +364,25 @@ module.exports = {
                 comment: "Please provide parameters"
             });
         }
-    }
+    },
+    adminlogin: function(req, res) {
+        if (req.body) {
+            if (req.body.email && req.body.email != "" && req.body.password && req.body.password != "") {
+                var print = function(data) {
+                    res.json(data);
+                }
+                User.adminlogin(req.body, print);
+            } else {
+                res.json({
+                    value: "false",
+                    comment: "Please provide parameters"
+                });
+            }
+        } else {
+            res.json({
+                value: "false",
+                comment: "Please provide parameters"
+            });
+        }
+    },
 };
