@@ -27,7 +27,7 @@ module.exports = {
     //         });
     //     });
     // },
-    uploadfile: function(req, res) {
+    upload: function(req, res) {
         res.connection.setTimeout(20000000);
         req.connection.setTimeout(20000000);
         req.file("file").upload({

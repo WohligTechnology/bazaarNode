@@ -223,7 +223,9 @@ module.exports = {
                                     });
                                 });
                             } else {
-                                res.json(data);
+                                res.json({
+                                    value: true
+                                });
                             }
                         } else {
                             res.json(data);
@@ -344,12 +346,16 @@ module.exports = {
                                     i++;
                                     if (i == req.session.cart.items.length) {
                                         req.session.cart = {};
-                                        res.send("http://wohlig.co.in/tagboss");
+                                        res.json({
+                                            value: true
+                                        });
                                     }
                                 });
                             });
                         } else {
-                            res.send("http://wohlig.co.in/tagboss");
+                            res.send({
+                                value: true
+                            });
                         }
                     } else {
                         res.json(data);
