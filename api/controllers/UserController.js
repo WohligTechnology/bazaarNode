@@ -5,6 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var frontend = "http://wohlig.co.in/tagboss/";
+// var frontend = "http://192.168.0.106:8080";
 var passport = require('passport'),
     TwitterStrategy = require('passport-twitter').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
@@ -129,26 +130,33 @@ module.exports = {
         })(req, res);
     },
     callbackt: passport.authenticate('twitter', {
-        successRedirect: frontend,
+        successRedirect: '/user/success',
         failureRedirect: '/user/fail'
     }),
     callbackg: passport.authenticate('google', {
-        successRedirect: frontend,
+        successRedirect: '/user/success',
         failureRedirect: '/user/fail'
     }),
     callbackf: passport.authenticate('facebook', {
-        successRedirect: frontend,
+        successRedirect: '/user/success',
         failureRedirect: '/user/fail'
     }),
     success: function(req, res, data) {
-        if (req.session.passport) {
-            sails.sockets.blast("login", {
-                loginid: req.session.loginid,
-                status: "success",
-                user: req.session.passport.user
+        if (req.session.cart && req.session.cart.items.length > 0) {
+            var i = 0;
+            _.each(req.session.cart.items, function(art) {
+                art.id = req.session.passport.user.id;
+                Cart.save(art, function(cartrespo) {
+                    i++;
+                    if (i == req.session.cart.items.length) {
+                        req.session.cart = {};
+                        res.redirect(frontend);
+                    }
+                });
             });
+        } else {
+            res.redirect(frontend);
         }
-        res.view("success");
     },
     fail: function(req, res) {
         sails.sockets.blast("login", {
@@ -180,9 +188,15 @@ module.exports = {
     //////////////////////////////
     save: function(req, res) {
         if (req.body) {
-            if (req.session.passport) {
-                req.body._id = req.session.passport.user.id;
-                user();
+            if (req.body._id) {
+                if (req.body._id != "" && sails.ObjectID.isValid(req.body._id)) {
+                    user();
+                } else {
+                    res.json({
+                        value: false,
+                        comment: "User-id is incorrect"
+                    });
+                }
             } else {
                 user();
             }
@@ -190,12 +204,30 @@ module.exports = {
             function user() {
                 var print = function(data) {
                     if (data.value != false) {
-                        req.session.passport = {
-                            user: data
-                        };
-                        res.json({
-                            value: true
-                        });
+                        if (data.accesslevel && data.accesslevel == "customer") {
+                            req.session.passport = {
+                                user: data
+                            };
+                            if (req.session.cart && req.session.cart.items.length > 0) {
+                                var i = 0;
+                                _.each(req.session.cart.items, function(art) {
+                                    art.id = req.session.passport.user.id;
+                                    Cart.save(art, function(cartrespo) {
+                                        i++;
+                                        if (i == req.session.cart.items.length) {
+                                            req.session.cart = {};
+                                            res.json({
+                                                value: true
+                                            });
+                                        }
+                                    });
+                                });
+                            } else {
+                                res.json(data);
+                            }
+                        } else {
+                            res.json(data);
+                        }
                     } else {
                         res.json(data);
                     }
@@ -204,7 +236,7 @@ module.exports = {
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -230,7 +262,7 @@ module.exports = {
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -245,13 +277,13 @@ module.exports = {
                 User.findone(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "USer not loggedd in"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -265,13 +297,13 @@ module.exports = {
                 User.searchmail(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "Please provide parameters"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -285,13 +317,13 @@ module.exports = {
                 User.delete(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "User-id is incorrect"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -304,9 +336,21 @@ module.exports = {
                         req.session.passport = {
                             user: data
                         };
-                        res.json({
-                            value: true
-                        });
+                        if (req.session.cart && req.session.cart.items.length > 0) {
+                            var i = 0;
+                            _.each(req.session.cart.items, function(art) {
+                                art.id = req.session.passport.user.id;
+                                Cart.save(art, function(cartrespo) {
+                                    i++;
+                                    if (i == req.session.cart.items.length) {
+                                        req.session.cart = {};
+                                        res.send("http://wohlig.co.in/tagboss");
+                                    }
+                                });
+                            });
+                        } else {
+                            res.send("http://wohlig.co.in/tagboss");
+                        }
                     } else {
                         res.json(data);
                     }
@@ -314,13 +358,13 @@ module.exports = {
                 User.login(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "Please provide parameters"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -334,13 +378,13 @@ module.exports = {
                 User.changepassword(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "User-id is incorrect"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -354,13 +398,13 @@ module.exports = {
                 User.forgotpassword(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "Please provide parameters"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }
@@ -374,13 +418,13 @@ module.exports = {
                 User.adminlogin(req.body, print);
             } else {
                 res.json({
-                    value: "false",
+                    value: false,
                     comment: "Please provide parameters"
                 });
             }
         } else {
             res.json({
-                value: "false",
+                value: false,
                 comment: "Please provide parameters"
             });
         }

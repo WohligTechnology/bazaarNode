@@ -61,6 +61,7 @@ module.exports = {
             if (data.photos[0]) {
                 insertdata.profilepic = data.photos[0].value;
             }
+            insertdata.accesslevel = "customer";
             insertdata.token = data.token;
             insertdata.tokenSecret = data.tokenSecret;
             orfunc.tweetid = data.id;
@@ -70,6 +71,7 @@ module.exports = {
             insertdata.provider = data.provider;
             insertdata.username = data.username;
             insertdata.name = data.displayName;
+            insertdata.accesslevel = "customer";
             if (data.photos && data.photos[0]) {
                 insertdata.profilepic = data.photos[0].value;
             }
@@ -83,6 +85,7 @@ module.exports = {
         } else {
             insertdata.googleid = data.id;
             insertdata.provider = data.provider;
+            insertdata.accesslevel = "customer";
             insertdata.name = data.displayName;
             if (data.photos && data.photos[0]) {
                 insertdata.profilepic = data.photos[0].value;
@@ -232,7 +235,7 @@ module.exports = {
                             data.id = user;
                             callback({
                                 value: true,
-                                data: data
+                                data: "User updated"
                             });
                             db.close();
                         } else if (updated.result.nModified == 0 && updated.result.n != 0) {

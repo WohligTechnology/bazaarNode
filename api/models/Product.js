@@ -205,7 +205,6 @@ module.exports = {
                         });
                         db.close();
                     } else if (data2 && data2[0]) {
-                        delete data2[0].password;
                         callback(data2[0]);
                         db.close();
                     } else {

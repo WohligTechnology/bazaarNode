@@ -24,6 +24,7 @@ module.exports.bootstrap = function(cb) {
         sails.mime = require('mime'),
         sails.md5 = require('MD5'),
         sails.moment = require('moment'),
+        sails._ = require('lodash'),
         sails.fs = require('fs'),
         sails.lwip = require('lwip'),
         sails.myurl = "http://tagboss.wohlig.com/",
@@ -33,7 +34,7 @@ module.exports.bootstrap = function(cb) {
         // sails.fromEmail = "vigneshkasthuri2009@gmail.com",
         // // Connection URL
         sails.url = 'mongodb://localhost:27017/tagboss';
-        sails.query = function(myfunc) {
+    sails.query = function(myfunc) {
             sails.MongoClient.connect(sails.url, myfunc);
         }
         // It's very important to trigger this callback method when you are finished
