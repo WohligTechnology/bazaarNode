@@ -1,8 +1,38 @@
 module.exports = {
-    upload: function(req, res) {
+    // upload: function(req, res) {
+    //     res.connection.setTimeout(20000000);
+    //     req.connection.setTimeout(20000000);
+    //     req.file("file").upload(function(err, uploadedFiles) {
+    //         if (err) return res.send(500, err);
+    //         _.each(uploadedFiles, function(n) {
+    //             var oldpath = n.fd;
+    //             var source = sails.fs.createReadStream(n.fd);
+    //             n.fd = n.fd.split('\\').pop().split('/').pop();
+    //             var split = n.fd.split('.');
+    //             n.fd = split[0] + "." + split[1].toLowerCase();
+    //             var dest = sails.fs.createWriteStream('./tbimg/' + n.fd);
+    //             source.pipe(dest);
+    //             source.on('end', function() {
+    //                 sails.fs.unlink(oldpath, function(data) {
+    //                     console.log(data);
+    //                 });
+    //             });
+    //             source.on('error', function(err) {
+    //                 console.log(err);
+    //             });
+    //         });
+    //         return res.json({
+    //             message: uploadedFiles.length + ' file(s) uploaded successfully!',
+    //             files: uploadedFiles
+    //         });
+    //     });
+    // },
+    uploadfile: function(req, res) {
         res.connection.setTimeout(20000000);
         req.connection.setTimeout(20000000);
-        req.file("file").upload(function(err, uploadedFiles) {
+        req.file("file").upload({
+            maxBytes: 100000000000000000000
+        }, function(err, uploadedFiles) {
             if (err) return res.send(500, err);
             _.each(uploadedFiles, function(n) {
                 var oldpath = n.fd;
@@ -10,15 +40,34 @@ module.exports = {
                 n.fd = n.fd.split('\\').pop().split('/').pop();
                 var split = n.fd.split('.');
                 n.fd = split[0] + "." + split[1].toLowerCase();
-                var dest = sails.fs.createWriteStream('./tbimg/' + n.fd);
-                source.pipe(dest);
-                source.on('end', function() {
-                    sails.fs.unlink(oldpath, function(data) {
-                        console.log(data);
-                    });
-                });
-                source.on('error', function(err) {
-                    console.log(err);
+                sails.lwip.open(oldpath, function(err, image) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var dimensions = {};
+                        var height = "";
+                        dimensions.width = image.width();
+                        dimensions.height = image.height();
+                        height = dimensions.height / dimensions.width * 800;
+                        image.resize(800, height, "lanczos", function(err, image) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                image.toBuffer('jpg', {
+                                    quality: 80
+                                }, function(err, buffer) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        var dest = sails.fs.createWriteStream('./tbimg/' + n.fd);
+                                        sails.fs.writeFile(dest.path, buffer, function(respo) {
+                                            sails.fs.unlink(oldpath, function(data) {});
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
             });
             return res.json({
