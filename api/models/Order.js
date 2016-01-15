@@ -37,6 +37,8 @@ module.exports = {
                     newdata.type = data.type;
                     newdata.billing = data.billing;
                     newdata.shipping = data.shipping;
+                    newdata.name = data.name;
+                    newdata.mobile = data.mobile;
                     newdata.orderid = "";
                     var possible = "0123456789";
                     for (var i = 0; i < 9; i++) {
@@ -56,7 +58,20 @@ module.exports = {
                             delete data.user;
                             delete data.price;
                             delete data.type;
-                            User.save(data, callback);
+                            User.save(data, function(respouser) {
+                                if (respouser.value != false) {
+                                    callback({
+                                        id: newdata._id
+                                    });
+                                    db.close();
+                                } else {
+                                    callback({
+                                        value: false,
+                                        comment: "Some error"
+                                    });
+                                    db.close();
+                                }
+                            });
                         } else {
                             callback({
                                 value: false,
@@ -118,8 +133,8 @@ module.exports = {
             }
             if (db) {
                 db.collection("order").count({
-                    artist: {
-                        '$regex': check
+                    orderid: {
+                        $exists: true
                     }
                 }, function(err, number) {
                     if (number && number != "") {
@@ -143,8 +158,8 @@ module.exports = {
 
                 function callbackfunc() {
                     db.collection("order").find({
-                        artist: {
-                            '$regex': check
+                        orderid: {
+                            $exists: true
                         }
                     }, {}).skip(pagesize * (pagenumber - 1)).limit(pagesize).toArray(function(err, found) {
                         if (err) {
@@ -183,6 +198,35 @@ module.exports = {
                 }).toArray(function(err, data2) {
                     if (data2 && data2[0]) {
                         callback(data2);
+                        db.close();
+                    } else if (err) {
+                        console.log(err);
+                        callback({
+                            value: false
+                        });
+                        db.close();
+                    } else {
+                        callback([]);
+                        db.close();
+                    }
+                });
+            }
+        });
+    },
+    findone: function(data, callback) {
+        sails.query(function(err, db) {
+            if (err) {
+                console.log(err);
+                callback({
+                    value: false
+                });
+            }
+            if (db) {
+                db.collection("order").find({
+                    _id: sails.ObjectID(data._id)
+                }).toArray(function(err, data2) {
+                    if (data2 && data2[0]) {
+                        callback(data2[0]);
                         db.close();
                     } else if (err) {
                         console.log(err);

@@ -64,6 +64,26 @@ module.exports = {
         }
         Order.find(req.body, print);
     },
+    findone: function(req, res) {
+        if (req.body) {
+            if (req.body._id && req.body._id != "" && sails.ObjectID.isValid(req.body._id)) {
+                var print = function(data) {
+                    res.json(data);
+                }
+                Order.findone(req.body, print);
+            } else {
+                res.json({
+                    value: false,
+                    comment: "Orderid incorrect"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                comment: "Please provide parameters"
+            });
+        }
+    },
     findOrders: function(req, res) {
         if (req.session.passport) {
             req.body.user = req.session.passport.user.id;

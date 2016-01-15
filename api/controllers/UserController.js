@@ -61,8 +61,9 @@ module.exports = {
     //////////////////////////////
     // LOGIN FUNCTIONS
     logint: function(req, res) {
-        var user = req.param("user");
-
+        if (req.param("url") && req.param("url") != "") {
+            frontend = req.param("url");
+        }
         passport.use(new TwitterStrategy({
                 consumerKey: "Gw3Y8I7DqKXE0gsXt6u5Ltxmd",
                 consumerSecret: "fvRPSYfPJ7mrHZs5kKM7PMQZccAhDD7RsEms8yGWE9b3oUuzXH",
@@ -72,9 +73,6 @@ module.exports = {
                 profile.token = token;
                 profile.tokenSecret = tokenSecret;
                 profile.provider = "Twitter";
-                if (user && sails.ObjectID.isValid(user)) {
-                    profile._id = user;
-                }
                 User.findorcreate(profile, done);
             }
         ));
@@ -84,8 +82,9 @@ module.exports = {
         passport.authenticate('twitter')(req, res);
     },
     loginf: function(req, res) {
-        var user = req.param("user");
-
+        if (req.param("url") && req.param("url") != "") {
+            frontend = req.param("url");
+        }
         passport.use(new FacebookStrategy({
                 clientID: "698269600308287",
                 clientSecret: "2f9ec34541b81ea98ab6d0f798be9579",
@@ -95,9 +94,6 @@ module.exports = {
                 profile.accessToken = accessToken;
                 profile.refreshToken = refreshToken;
                 profile.provider = "Facebook";
-                if (user && sails.ObjectID.isValid(user)) {
-                    profile._id = user;
-                }
                 User.findorcreate(profile, done);
             }
         ));
@@ -109,8 +105,9 @@ module.exports = {
         })(req, res);
     },
     loging: function(req, res) {
-        var user = req.param("user");
-
+        if (req.param("url") && req.param("url") != "") {
+            frontend = req.param("url");
+        }
         passport.use(new GoogleStrategy({
                 clientID: "255093403704-0ss1qsp6r0pegavuhk9hknvggtk47357.apps.googleusercontent.com",
                 clientSecret: "QLHIdMHGd-R6tiZV5rYOqkha",
