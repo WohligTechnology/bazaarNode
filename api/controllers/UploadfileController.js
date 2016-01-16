@@ -97,7 +97,7 @@ module.exports = {
             if (!isfile2) {
                 console.log("in if");
                 sails.lwip.open(newfilepath, function(err, image) {
-                    if (width < image.width() || height < image.height) {
+                    if (image && (width < image.width() || height < image.height)) {
                         var dimensions = {};
                         dimensions.width = image.width();
                         dimensions.height = image.height();
