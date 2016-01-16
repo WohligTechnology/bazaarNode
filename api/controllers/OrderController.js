@@ -26,10 +26,10 @@ module.exports = {
                     Order.save(respo, print);
                 });
             } else {
-                res.json({
-                    value: false,
-                    comment: "No user logged in"
-                });
+              var print = function(data) {
+                    res.json(data);
+                }
+                Order.save(req.body,print);
             }
         } else {
             res.json({
